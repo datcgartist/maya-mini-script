@@ -1,0 +1,11 @@
+int $keyCount = 0;
+//check for selected curves
+$keyCount = `keyframe -an keys -q -kc`;
+if ($keyCount == 0) {  							
+    //no curves selected: delete current key of objects
+		timeSliderClearKey;
+} 
+else {								
+    //curves are selected:  delete selected keys in graph
+		cutKey -animation keys -clear;
+}
