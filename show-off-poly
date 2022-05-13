@@ -1,0 +1,6 @@
+string $activePanel = `getPanel -wf`;
+if (`modelEditor -q -polymeshes $activePanel` == 1) {
+   modelEditor -e -polymeshes 0 $activePanel;
+} else {
+   modelEditor -e -polymeshes 1 $activePanel;
+}
