@@ -1,0 +1,27 @@
+proc reParentObjRotateWorld(){
+    string $arrayControl[] = `ls -sl`;
+    for ($control in $arrayControl) {       
+        string $newLocator = "PARENT_" + $control;
+        spaceLocator -p 0 0 0 -n $newLocator;
+        select -r $newLocator;
+        scale 30 30 30; 
+        currentTime 1;
+        SetKey;
+        
+        select -r $newLocator;
+        select -tgl $control;
+        MatchTranslation;
+        
+        select -r $control;
+        currentTime 1 ;
+        copyKey ;
+        
+        select -r $newLocator;
+        timeSliderPasteKey true;
+        
+        parentConstraint -mo -w 1 $newLocator $control;
+        select -cl;
+    }
+    print "ReParent => OK \n";
+}
+reParentObjRotateWorld();
