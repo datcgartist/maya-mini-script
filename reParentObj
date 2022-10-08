@@ -1,0 +1,28 @@
+proc reParentObj(){
+    string $arrayControl[] = `ls -sl`;
+    for ($control in $arrayControl) {       
+        string $newLocator = "PARENT_" + $control;
+        spaceLocator -p 0 0 0 -n $newLocator;
+        select -r $newLocator;
+        scale 20 20 20; 
+        currentTime 1;
+        SetKey;
+        
+        select -r $newLocator;
+        select -tgl $control;
+        MatchTranslation;
+        MatchRotation;
+        
+        select -r $control;
+        currentTime 1 ;
+        copyKey ;
+        
+        select -r $newLocator;
+        timeSliderPasteKey true;
+        
+        parentConstraint -w 1 $newLocator $control;
+        select -cl;
+    }
+    print "ReParent => OK \n";
+}
+reParentObj();
