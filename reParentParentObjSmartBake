@@ -1,0 +1,47 @@
+proc reParentParentObjSmartBake(){
+
+    float $minTime = `playbackOptions -q -minTime`;
+    float $maxTime = `playbackOptions -q -maxTime`;
+    string $arrayControl[] = `ls -sl`;
+    string $bakeList[];
+    int $count=0;
+    
+    //Locator child of Control
+    for ($control in $arrayControl) {       
+        string $newLocator = "PARENT_" + $control;
+        spaceLocator -p 0 0 0 -n $newLocator;
+        
+        select -r $control;
+        select -tgl $newLocator;
+        parentConstraint $control $newLocator;
+        select -cl;
+        $bakeList[$count] = $newLocator;
+        $count+=1;
+    }
+    $count=0;
+    
+    //Bakekey one time
+    bakeResults -simulation true 
+                -t ($minTime+":"+$maxTime) 
+                -smart 1 
+                -disableImplicitControl true 
+                -preserveOutsideKeys true 
+                -sparseAnimCurveBake false 
+                -removeBakedAttributeFromLayer false 
+                -removeBakedAnimFromLayer false 
+                -bakeOnOverrideLayer false 
+                -minimizeRotation true 
+                -controlPoints false -shape true $bakeList;
+                
+    //Control child Locator                
+    for ($locator in $bakeList) {
+             select -r $arrayControl[$count];
+             delete -cn;
+             select -cl;
+             parentConstraint -w 1 -mo $locator $arrayControl[$count];
+             $count+=1;
+         }
+    select -cl;
+    print "ReParent => OK \n";
+}
+reParentParentObjSmartBake();
